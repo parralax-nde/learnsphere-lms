@@ -1,0 +1,40 @@
+.container {
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  overflow: hidden;
+  background: #fff;
+}
+
+.tabList {
+  display: flex;
+  border-bottom: 1px solid #e5e7eb;
+  background: #f9fafb;
+}
+
+.tab {
+  flex: 1;
+  padding: 0.65rem 1rem;
+  background: none;
+  border: none;
+  border-bottom: 2px solid transparent;
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: #6b7280;
+  transition: color 0.15s, border-color 0.15s;
+}
+
+.tab:hover {
+  color: #374151;
+}
+
+.activeTab {
+  color: #6366f1;
+  border-bottom-color: #6366f1;
+  background: #fff;
+  font-weight: 700;
+}
+
+.panel {
+  padding: 1.25rem;
+}
