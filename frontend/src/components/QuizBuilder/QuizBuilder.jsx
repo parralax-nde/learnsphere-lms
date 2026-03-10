@@ -146,18 +146,6 @@ export default function QuizBuilder({ authToken, onSave }) {
     );
   }
 
-  // ─── Serialise for API ─────────────────────────────────────
-
-  function serialiseQuestions() {
-    return questions.map(({ text, type, points, choices, correctAnswer }) => ({
-      text,
-      type,
-      points: Number(points),
-      choices: choices.map(({ text: t, isCorrect }) => ({ text: t, isCorrect })),
-      correctAnswer,
-    }));
-  }
-
   // ─── Submit ────────────────────────────────────────────────
 
   const handleSubmit = useCallback(
@@ -171,10 +159,18 @@ export default function QuizBuilder({ authToken, onSave }) {
         return;
       }
 
+      const serialisedQuestions = questions.map(({ text, type, points, choices, correctAnswer }) => ({
+        text,
+        type,
+        points: Number(points),
+        choices: choices.map(({ text: t, isCorrect }) => ({ text: t, isCorrect })),
+        correctAnswer,
+      }));
+
       setSaving(true);
       try {
         const result = await createQuiz(
-          { title: title.trim(), description: description.trim(), questions: serialiseQuestions() },
+          { title: title.trim(), description: description.trim(), questions: serialisedQuestions },
           authToken
         );
         setSuccess('Quiz saved successfully!');
@@ -186,7 +182,7 @@ export default function QuizBuilder({ authToken, onSave }) {
         setSaving(false);
       }
     },
-    [title, description, questions, authToken, onSave] // eslint-disable-line react-hooks/exhaustive-deps
+    [title, description, questions, authToken, onSave]
   );
 
   // ─── Computed ──────────────────────────────────────────────

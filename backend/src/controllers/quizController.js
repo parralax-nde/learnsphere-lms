@@ -142,7 +142,7 @@ async function updateQuiz(req, res) {
   }
 
   if (quiz.createdBy.toString() !== req.user._id.toString()) {
-    return res.status(403).json({ error: 'Not authorised to update this quiz' });
+    return res.status(403).json({ error: 'Not authorized to update this quiz' });
   }
 
   const { title, description, questions } = req.body;
@@ -200,7 +200,7 @@ async function deleteQuiz(req, res) {
   }
 
   if (quiz.createdBy.toString() !== req.user._id.toString()) {
-    return res.status(403).json({ error: 'Not authorised to delete this quiz' });
+    return res.status(403).json({ error: 'Not authorized to delete this quiz' });
   }
 
   try {
