@@ -1,5 +1,4 @@
 const jwt = require('jsonwebtoken');
-const { v4: uuidv4 } = require('crypto');
 
 const ACCESS_SECRET = process.env.JWT_SECRET || 'learnsphere_jwt_secret';
 const REFRESH_SECRET = process.env.JWT_REFRESH_SECRET || 'learnsphere_refresh_secret';

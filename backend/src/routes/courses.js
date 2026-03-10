@@ -1,4 +1,5 @@
 const { Router } = require('express');
+const rateLimit = require('express-rate-limit');
 const { authenticate, requireRole } = require('../middleware/auth');
 const {
   createCourse,
@@ -13,6 +14,18 @@ const {
 } = require('../controllers/courseController');
 
 const router = Router();
+
+// General API rate limit (100 requests per 15 minutes per IP)
+const apiLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 100,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { error: 'Too many requests, please try again later.' },
+});
+
+// Apply rate limiting to all course routes
+router.use(apiLimiter);
 
 // ─── Public / role-adaptive ───────────────────────────────────────────────────
 // GET /api/courses  – role-adaptive listing (see courseController.listCourses)
