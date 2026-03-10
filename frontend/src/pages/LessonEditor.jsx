@@ -32,6 +32,10 @@ export default function LessonEditor() {
   const [saving, setSaving] = useState(false);
   const [saveStatus, setSaveStatus] = useState(''); // '' | 'saved' | 'error'
 
+  // Incrementing key forces RichTextEditor to fully remount after content loads,
+  // ensuring Quill initialises with the correct initial HTML.
+  const [editorKey, setEditorKey] = useState(0);
+
   // New lesson form
   const [showNewForm, setShowNewForm] = useState(false);
   const [newLessonTitle, setNewLessonTitle] = useState('');
@@ -55,11 +59,17 @@ export default function LessonEditor() {
   // Load a specific lesson when the URL changes
   useEffect(() => {
     if (lessonId) {
+      // Reset editor state before async load so stale content doesn't linger
+      setActiveLesson(null);
+      setTitle('');
+      setContent('');
       loadLesson(lessonId);
     } else {
       setActiveLesson(null);
       setTitle('');
       setContent('');
+      // Force editor to reset when switching to the "New Lesson" view
+      setEditorKey((k) => k + 1);
     }
   }, [lessonId]);
 
@@ -83,13 +93,15 @@ export default function LessonEditor() {
       setActiveLesson(data.lesson);
       setTitle(data.lesson.title);
       setContent(data.lesson.content ?? '');
+      // Increment key to force RichTextEditor to remount with the loaded content
+      setEditorKey((k) => k + 1);
     } catch (err) {
       if (err.response?.status === 401) navigate('/login');
       else setError('Failed to load lesson.');
     }
   }
 
-  // Auto-save content when the editor value changes (debounced)
+  // Capture content changes from the Quill editor
   const handleContentChange = useCallback((html) => {
     setContent(html);
     setSaveStatus('');
@@ -269,6 +281,7 @@ export default function LessonEditor() {
           <div className="le-content-group">
             <label className="le-content-label">Content</label>
             <RichTextEditor
+              key={editorKey}
               value={content}
               onChange={handleContentChange}
               placeholder="Write your lesson content here… Use the toolbar for formatting, code blocks, and media."
