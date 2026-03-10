@@ -1,4 +1,24 @@
+# Dependencies
 node_modules/
+
+# Build output
+dist/
+build/
+
+# Environment files (never commit real secrets)
 .env
-*.log
+.env.local
+.env.production
+
+# Database files
+*.db
+*.db-journal
+
+# Editor / OS
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Test coverage
 coverage/
