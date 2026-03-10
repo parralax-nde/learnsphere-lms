@@ -253,14 +253,17 @@ async function startOrSubmitAttempt(req, res) {
     const now = new Date();
     const maxScore = quiz.totalPoints;
 
+    // Build a Map for O(1) question lookups
+    const questionMap = new Map(quiz.questions.map((q) => [q.id, q]));
+
     // Grade answers — validate all question IDs first
-    const invalidId = answers.find(({ questionId }) => !quiz.questions.find((q) => q.id === questionId));
+    const invalidId = answers.find(({ questionId }) => !questionMap.has(questionId));
     if (invalidId) {
       return res.status(400).json({ error: `Question ${invalidId.questionId} not found in this quiz` });
     }
 
     const gradedAnswers = answers.map(({ questionId, answer }) => {
-      const question = quiz.questions.find((q) => q.id === questionId);
+      const question = questionMap.get(questionId);
       const { isCorrect, pointsEarned } = autoGradeAnswer(question, answer);
       return { questionId, answer: answer ?? null, isCorrect, pointsEarned };
     });

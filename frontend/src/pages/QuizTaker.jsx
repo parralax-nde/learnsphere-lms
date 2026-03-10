@@ -10,7 +10,11 @@ function Timer({ totalSeconds, onExpire }) {
   useEffect(() => {
     ref.current = setInterval(() => {
       setRemaining(r => {
-        if (r <= 1) { clearInterval(ref.current); onExpire(); return 0; }
+        if (r <= 1) {
+          clearInterval(ref.current);
+          onExpire();
+          return 0;
+        }
         return r - 1;
       });
     }, 1000);
