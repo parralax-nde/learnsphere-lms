@@ -1,0 +1,54 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id                   String    @id @default(cuid())
+  email                String    @unique
+  passwordHash         String
+  fullName             String
+  role                 String    @default("learner") // "admin" | "instructor" | "learner"
+  isEmailVerified      Boolean   @default(false)
+  emailVerifyToken     String?   @unique
+  emailVerifyTokenExpiry DateTime?
+  createdAt            DateTime  @default(now())
+  updatedAt            DateTime  @updatedAt
+
+  courses              Course[]
+  refreshTokens        RefreshToken[]
+}
+
+model RefreshToken {
+  id        String   @id @default(cuid())
+  jti       String   @unique
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+}
+
+model Course {
+  id             String   @id @default(cuid())
+  instructorId   String
+  instructor     User     @relation(fields: [instructorId], references: [id], onDelete: Cascade)
+
+  title          String
+  shortDescription String  @default("")
+  fullDescription  String  @default("")
+  category       String   @default("")
+  difficulty     String   @default("beginner") // "beginner" | "intermediate" | "advanced" | "all_levels"
+  prerequisites  String   @default("[]") // JSON array of strings
+  coverImageUrl  String   @default("")
+
+  status         String   @default("draft") // "draft" | "published"
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+}
