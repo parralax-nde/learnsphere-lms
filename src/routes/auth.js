@@ -2,10 +2,23 @@
 
 const express = require('express');
 const passport = require('passport');
+const rateLimit = require('express-rate-limit');
 const { signToken, requireAuth } = require('../middleware/auth');
 const UserModel = require('../models/User');
 
 const router = express.Router();
+
+/**
+ * Rate limiter for authentication endpoints.
+ * Allows up to 20 requests per 15-minute window per IP address.
+ */
+const authLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 20,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { error: 'Too many requests, please try again later.' },
+});
 
 /**
  * GET /auth/google
@@ -16,6 +29,7 @@ const router = express.Router();
  */
 router.get(
   '/google',
+  authLimiter,
   passport.authenticate('google', {
     scope: ['openid', 'profile', 'email'],
     session: false,
@@ -33,6 +47,7 @@ router.get(
  */
 router.get(
   '/google/callback',
+  authLimiter,
   passport.authenticate('google', {
     session: false,
     failureRedirect: `${process.env.FRONTEND_URL || ''}/login?error=oauth_failed`,
@@ -50,7 +65,7 @@ router.get(
  * Returns the authenticated user's public profile.
  * Requires a valid Bearer JWT in the Authorization header.
  */
-router.get('/me', requireAuth, (req, res) => {
+router.get('/me', authLimiter, requireAuth, (req, res) => {
   res.json({ user: UserModel.toPublic(req.user) });
 });
 
@@ -62,7 +77,7 @@ router.get('/me', requireAuth, (req, res) => {
  * token.  This endpoint provides a conventional logout hook that can be
  * extended with token revocation (e.g. a blocklist) in the future.
  */
-router.post('/logout', requireAuth, (_req, res) => {
+router.post('/logout', authLimiter, requireAuth, (_req, res) => {
   res.json({ message: 'Logged out successfully. Please discard your token.' });
 });
 
