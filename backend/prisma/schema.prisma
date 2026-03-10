@@ -1,0 +1,65 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+// Role values: STUDENT | INSTRUCTOR | ADMIN
+// CourseStatus values: DRAFT | PENDING_REVIEW | PUBLISHED | REJECTED
+
+model User {
+  id                     String    @id @default(cuid())
+  email                  String    @unique
+  passwordHash           String
+  name                   String
+  /// STUDENT | INSTRUCTOR | ADMIN
+  role                   String    @default("STUDENT")
+  isEmailVerified        Boolean   @default(false)
+  emailVerifyToken       String?   @unique
+  emailVerifyTokenExpiry DateTime?
+  createdAt              DateTime  @default(now())
+  updatedAt              DateTime  @updatedAt
+
+  courses         Course[] @relation("InstructorCourses")
+  reviewedCourses Course[] @relation("ReviewerCourses")
+  refreshTokens   RefreshToken[]
+}
+
+model RefreshToken {
+  id        String   @id @default(cuid())
+  jti       String   @unique
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+}
+
+model Course {
+  id            String    @id @default(cuid())
+  title         String
+  description   String
+  category      String    @default("")
+  thumbnailUrl  String?
+  /// DRAFT | PENDING_REVIEW | PUBLISHED | REJECTED
+  status        String    @default("DRAFT")
+  rejectionNote String?
+
+  instructorId String
+  instructor   User   @relation("InstructorCourses", fields: [instructorId], references: [id], onDelete: Cascade)
+
+  reviewedById String?
+  reviewedBy   User?   @relation("ReviewerCourses", fields: [reviewedById], references: [id])
+  reviewedAt   DateTime?
+
+  submittedAt DateTime?
+  publishedAt DateTime?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
