@@ -1,0 +1,134 @@
+.lv-loading,
+.lv-error-page {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  gap: 16px;
+  color: #6b7280;
+  font-size: 0.95rem;
+}
+
+.lv-page {
+  min-height: 100vh;
+  background: #f9fafb;
+}
+
+.lv-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 32px;
+  background: #fff;
+  border-bottom: 1px solid #e5e7eb;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.lv-edit-link,
+.lv-back-link {
+  font-size: 0.875rem;
+  color: #6b7280;
+  text-decoration: none;
+  font-weight: 500;
+}
+.lv-edit-link:hover,
+.lv-back-link:hover {
+  color: #374151;
+  text-decoration: none;
+}
+
+.lv-article {
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 48px 24px;
+  background: #fff;
+  min-height: calc(100vh - 53px);
+}
+
+.lv-title {
+  font-size: 2rem;
+  font-weight: 800;
+  color: #111827;
+  margin-bottom: 32px;
+  padding-bottom: 16px;
+  border-bottom: 2px solid #f3f4f6;
+}
+
+.lv-no-content {
+  color: #9ca3af;
+  font-style: italic;
+}
+
+/* Render rich-text content */
+.lv-content {
+  line-height: 1.8;
+  color: #1f2937;
+}
+
+.lv-content h1 { font-size: 1.75rem; font-weight: 700; margin: 24px 0 12px; }
+.lv-content h2 { font-size: 1.5rem;  font-weight: 700; margin: 20px 0 10px; }
+.lv-content h3 { font-size: 1.25rem; font-weight: 600; margin: 16px 0 8px;  }
+.lv-content h4 { font-size: 1.125rem; font-weight: 600; margin: 14px 0 8px; }
+
+.lv-content p    { margin-bottom: 16px; }
+.lv-content ul,
+.lv-content ol   { padding-left: 28px; margin-bottom: 16px; }
+.lv-content li   { margin-bottom: 6px; }
+
+.lv-content strong { font-weight: 700; }
+.lv-content em     { font-style: italic; }
+.lv-content u      { text-decoration: underline; }
+.lv-content s      { text-decoration: line-through; }
+
+.lv-content blockquote {
+  border-left: 4px solid #3b82f6;
+  margin: 16px 0;
+  padding: 8px 20px;
+  color: #6b7280;
+  background: #f0f9ff;
+  border-radius: 0 6px 6px 0;
+}
+
+.lv-content pre {
+  background: #1e293b;
+  color: #e2e8f0;
+  border-radius: 8px;
+  padding: 16px 20px;
+  overflow-x: auto;
+  margin: 16px 0;
+}
+
+.lv-content code {
+  font-family: 'Fira Code', 'Cascadia Code', monospace;
+  font-size: 0.875em;
+}
+
+.lv-content pre code {
+  background: none;
+  color: inherit;
+  padding: 0;
+}
+
+.lv-content :not(pre) > code {
+  background: #f1f5f9;
+  color: #e11d48;
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+.lv-content a {
+  color: #3b82f6;
+  text-decoration: underline;
+}
+.lv-content a:hover {
+  color: #2563eb;
+}
+
+.lv-content img {
+  max-width: 100%;
+  border-radius: 8px;
+  margin: 8px 0;
+}

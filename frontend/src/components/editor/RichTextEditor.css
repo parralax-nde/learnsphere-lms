@@ -1,0 +1,68 @@
+/* Override Quill snow theme to integrate with the app design */
+
+.rte-wrapper {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  overflow: hidden;
+  background: #fff;
+}
+
+/* Toolbar */
+.rte-wrapper .ql-toolbar.ql-snow {
+  border: none;
+  border-bottom: 1px solid #d1d5db;
+  background: #f9fafb;
+  padding: 8px 12px;
+  flex-shrink: 0;
+}
+
+/* Editor area */
+.rte-wrapper .ql-container.ql-snow {
+  border: none;
+  font-size: 1rem;
+  flex: 1;
+}
+
+.rte-wrapper .ql-editor {
+  min-height: 300px;
+  padding: 16px 20px;
+  line-height: 1.7;
+}
+
+.rte-wrapper .ql-editor.ql-blank::before {
+  color: #9ca3af;
+  font-style: italic;
+}
+
+/* Code blocks */
+.rte-wrapper .ql-editor pre.ql-syntax {
+  background-color: #1e293b;
+  color: #e2e8f0;
+  border-radius: 6px;
+  padding: 14px 18px;
+  font-family: 'Fira Code', 'Cascadia Code', monospace;
+  font-size: 0.875rem;
+  overflow-x: auto;
+}
+
+/* Blockquote */
+.rte-wrapper .ql-editor blockquote {
+  border-left: 4px solid #3b82f6;
+  margin: 8px 0;
+  padding: 4px 16px;
+  color: #6b7280;
+}
+
+/* Headings */
+.rte-wrapper .ql-editor h1 { font-size: 1.875rem; font-weight: 700; margin-bottom: 8px; }
+.rte-wrapper .ql-editor h2 { font-size: 1.5rem;   font-weight: 700; margin-bottom: 8px; }
+.rte-wrapper .ql-editor h3 { font-size: 1.25rem;  font-weight: 600; margin-bottom: 6px; }
+.rte-wrapper .ql-editor h4 { font-size: 1.125rem; font-weight: 600; margin-bottom: 6px; }
+
+/* Lists */
+.rte-wrapper .ql-editor ul,
+.rte-wrapper .ql-editor ol {
+  padding-left: 24px;
+}
