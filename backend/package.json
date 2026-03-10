@@ -7,7 +7,7 @@
   "scripts": {
     "start": "node src/server.js",
     "dev": "node --watch src/server.js",
-    "test": "cross-env NODE_OPTIONS='--experimental-vm-modules' NODE_ENV=test DATABASE_URL='file:./tests/test.db' JWT_SECRET=test-secret EMAIL_ENABLED=false jest --runInBand --forceExit",
+    "test": "cross-env NODE_OPTIONS='--experimental-vm-modules' NODE_ENV=test JWT_SECRET=test-secret EMAIL_ENABLED=false jest --runInBand --forceExit",
     "db:push": "prisma db push",
     "db:migrate": "prisma migrate dev",
     "db:studio": "prisma studio"
