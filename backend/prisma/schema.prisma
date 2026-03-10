@@ -19,3 +19,88 @@ model User {
 
   @@map("users")
 }
+
+// ---------------------------------------------------------------------------
+// Quiz Builder models
+// ---------------------------------------------------------------------------
+
+/// A quiz created by an instructor containing one or more questions.
+model Quiz {
+  id          String        @id @default(cuid())
+  title       String
+  description String?
+  totalPoints Int           @default(0)
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+  questions   Question[]
+  attempts    QuizAttempt[]
+
+  @@map("quizzes")
+}
+
+/// A single question inside a quiz.
+/// type values: MULTIPLE_CHOICE | TRUE_FALSE | SHORT_ANSWER
+model Question {
+  id                    String          @id @default(cuid())
+  quizId                String
+  quiz                  Quiz            @relation(fields: [quizId], references: [id], onDelete: Cascade)
+  type                  String
+  text                  String
+  points                Int             @default(1)
+  /// Correct answer for objective questions:
+  ///   MULTIPLE_CHOICE -> option id
+  ///   TRUE_FALSE      -> "true" | "false"
+  ///   SHORT_ANSWER    -> null (requires manual grading)
+  correctAnswer         String?
+  requiresManualGrading Boolean         @default(false)
+  order                 Int             @default(0)
+  createdAt             DateTime        @default(now())
+  updatedAt             DateTime        @updatedAt
+  options               QuestionOption[]
+  answers               StudentAnswer[]
+
+  @@map("questions")
+}
+
+/// An answer option for a MULTIPLE_CHOICE question.
+model QuestionOption {
+  id         String   @id @default(cuid())
+  questionId String
+  question   Question @relation(fields: [questionId], references: [id], onDelete: Cascade)
+  text       String
+  order      Int      @default(0)
+
+  @@map("question_options")
+}
+
+/// One student's complete attempt at a quiz.
+model QuizAttempt {
+  id          String          @id @default(cuid())
+  quizId      String
+  quiz        Quiz            @relation(fields: [quizId], references: [id], onDelete: Cascade)
+  studentId   String
+  score       Int?
+  maxScore    Int             @default(0)
+  isGraded    Boolean         @default(false)
+  submittedAt DateTime        @default(now())
+  gradedAt    DateTime?
+  answers     StudentAnswer[]
+
+  @@map("quiz_attempts")
+}
+
+/// The student's answer to a single question within an attempt.
+model StudentAnswer {
+  id           String      @id @default(cuid())
+  attemptId    String
+  attempt      QuizAttempt @relation(fields: [attemptId], references: [id], onDelete: Cascade)
+  questionId   String
+  question     Question    @relation(fields: [questionId], references: [id], onDelete: Cascade)
+  answer       String?
+  /// null means pending manual grading (short answer); true/false for auto-graded
+  isCorrect    Boolean?
+  pointsEarned Int?
+  feedback     String?
+
+  @@map("student_answers")
+}

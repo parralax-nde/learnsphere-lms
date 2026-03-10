@@ -3,6 +3,12 @@ import { useSearchParams } from 'react-router-dom';
 import { verifyEmail } from '../api/auth.js';
 
 const styles = {
+  pageOuter: {
+    minHeight: '100vh',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
   wrapper: {
     width: '100%',
     maxWidth: '440px',
@@ -67,6 +73,7 @@ export default function VerifyEmail() {
   }, [searchParams]);
 
   return (
+    <div style={styles.pageOuter}>
     <div style={styles.wrapper}>
       <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
       <div style={styles.card}>
@@ -102,6 +109,7 @@ export default function VerifyEmail() {
           </>
         )}
       </div>
+    </div>
     </div>
   );
 }

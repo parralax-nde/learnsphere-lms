@@ -2,6 +2,12 @@ import { useState } from 'react';
 import RegisterForm from '../components/auth/RegisterForm.jsx';
 
 const styles = {
+  pageOuter: {
+    minHeight: '100vh',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
   wrapper: {
     width: '100%',
     maxWidth: '440px',
@@ -69,6 +75,7 @@ export default function Register() {
   }
 
   return (
+    <div style={styles.pageOuter}>
     <div style={styles.wrapper}>
       <div style={styles.card}>
         <div style={styles.logoRow}>
@@ -96,6 +103,7 @@ export default function Register() {
           </>
         )}
       </div>
+    </div>
     </div>
   );
 }

@@ -7,7 +7,6 @@ body {
   background-color: #f3f4f6;
   color: #111827;
   min-height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
 }
+
+/* Auth pages (register/verify-email) centre their card via their own wrapper */
