@@ -4,3 +4,5 @@ dist/
 *.db
 *.log
 nohup.out
+prisma/*.db
+prisma/tests/
