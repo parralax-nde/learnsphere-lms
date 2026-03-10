@@ -1,0 +1,81 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Quiz {
+  id                      String   @id @default(cuid())
+  title                   String
+  description             String?
+  timeLimitMinutes        Int?
+  maxAttempts             Int?
+  showAnswersAfterSubmission Boolean @default(true)
+  passingScore            Float    @default(0)
+  totalPoints             Int      @default(0)
+  createdAt               DateTime @default(now())
+  updatedAt               DateTime @updatedAt
+
+  questions Question[]
+  attempts  QuizAttempt[]
+}
+
+model Question {
+  id                   String   @id @default(cuid())
+  quizId               String
+  type                 String
+  text                 String
+  points               Int      @default(1)
+  correctAnswer        String?
+  requiresManualGrading Boolean @default(false)
+  order                Int      @default(0)
+  createdAt            DateTime @default(now())
+  updatedAt            DateTime @updatedAt
+
+  quiz    Quiz             @relation(fields: [quizId], references: [id], onDelete: Cascade)
+  options QuestionOption[]
+  answers StudentAnswer[]
+}
+
+model QuestionOption {
+  id         String   @id @default(cuid())
+  questionId String
+  text       String
+  order      Int      @default(0)
+
+  question Question @relation(fields: [questionId], references: [id], onDelete: Cascade)
+}
+
+model QuizAttempt {
+  id          String    @id @default(cuid())
+  quizId      String
+  studentId   String
+  score       Int?
+  maxScore    Int       @default(0)
+  isPassed    Boolean?
+  isGraded    Boolean   @default(false)
+  startedAt   DateTime  @default(now())
+  submittedAt DateTime?
+  gradedAt    DateTime?
+  createdAt   DateTime  @default(now())
+
+  quiz    Quiz            @relation(fields: [quizId], references: [id], onDelete: Cascade)
+  answers StudentAnswer[]
+}
+
+model StudentAnswer {
+  id           String   @id @default(cuid())
+  attemptId    String
+  questionId   String
+  answer       String?
+  isCorrect    Boolean?
+  pointsEarned Int?
+  feedback     String?
+  createdAt    DateTime @default(now())
+
+  attempt  QuizAttempt @relation(fields: [attemptId], references: [id], onDelete: Cascade)
+  question Question    @relation(fields: [questionId], references: [id], onDelete: Cascade)
+}
