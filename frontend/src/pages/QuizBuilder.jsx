@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
+import PropTypes from 'prop-types';
 import {
   getQuiz, createQuiz, updateQuiz,
   addQuestion, deleteQuestion
@@ -65,6 +66,16 @@ function SettingsPanel({ settings, onChange }) {
     </div>
   );
 }
+
+SettingsPanel.propTypes = {
+  settings: PropTypes.shape({
+    timeLimitMinutes: PropTypes.number,
+    maxAttempts: PropTypes.number,
+    passingScore: PropTypes.number,
+    showAnswersAfterSubmission: PropTypes.bool,
+  }).isRequired,
+  onChange: PropTypes.func.isRequired,
+};
 
 function QuestionForm({ quizId, onAdded }) {
   const [type, setType] = useState('MULTIPLE_CHOICE');
@@ -176,12 +187,16 @@ function QuestionForm({ quizId, onAdded }) {
   );
 }
 
+QuestionForm.propTypes = {
+  quizId: PropTypes.string.isRequired,
+  onAdded: PropTypes.func.isRequired,
+};
+
 export default function QuizBuilder() {
   const { id } = useParams();
   const navigate = useNavigate();
   const isNew = !id;
 
-  const [quiz, setQuiz] = useState(null);
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [settings, setSettings] = useState({
@@ -199,7 +214,6 @@ export default function QuizBuilder() {
   useEffect(() => {
     if (!isNew) {
       getQuiz(id).then(q => {
-        setQuiz(q);
         setTitle(q.title);
         setDescription(q.description ?? '');
         setSettings({
@@ -227,8 +241,7 @@ export default function QuizBuilder() {
         const q = await createQuiz(payload);
         navigate(`/quizzes/${q.id}/edit`, { replace: true });
       } else {
-        const q = await updateQuiz(id, payload);
-        setQuiz(q);
+        await updateQuiz(id, payload);
         setSuccess('Quiz saved!');
         setTimeout(() => setSuccess(''), 2000);
       }

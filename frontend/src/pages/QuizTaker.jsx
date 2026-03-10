@@ -1,5 +1,6 @@
 import { useEffect, useState, useRef, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
+import PropTypes from 'prop-types';
 import { getQuiz, submitAttempt, listAttempts } from '../api/quiz';
 
 function Timer({ totalSeconds, onExpire }) {
@@ -26,6 +27,11 @@ function Timer({ totalSeconds, onExpire }) {
     </div>
   );
 }
+
+Timer.propTypes = {
+  totalSeconds: PropTypes.number.isRequired,
+  onExpire: PropTypes.func.isRequired,
+};
 
 export default function QuizTaker() {
   const { id } = useParams();

@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
+import PropTypes from 'prop-types';
 import { getQuiz, listAttempts, getAttempt, gradeAnswer } from '../api/quiz';
 
 function GradableAnswer({ quizId, attemptId, answer, question, onGraded }) {
@@ -53,6 +54,22 @@ function GradableAnswer({ quizId, attemptId, answer, question, onGraded }) {
     </form>
   );
 }
+
+GradableAnswer.propTypes = {
+  quizId: PropTypes.string.isRequired,
+  attemptId: PropTypes.string.isRequired,
+  answer: PropTypes.shape({
+    id: PropTypes.string.isRequired,
+    answer: PropTypes.string,
+    pointsEarned: PropTypes.number,
+    feedback: PropTypes.string,
+  }).isRequired,
+  question: PropTypes.shape({
+    text: PropTypes.string.isRequired,
+    points: PropTypes.number.isRequired,
+  }).isRequired,
+  onGraded: PropTypes.func.isRequired,
+};
 
 function AttemptCard({ quizId, attemptSummary, quiz }) {
   const [expanded, setExpanded] = useState(false);
@@ -135,6 +152,22 @@ function AttemptCard({ quizId, attemptSummary, quiz }) {
     </div>
   );
 }
+
+AttemptCard.propTypes = {
+  quizId: PropTypes.string.isRequired,
+  attemptSummary: PropTypes.shape({
+    id: PropTypes.string.isRequired,
+    studentId: PropTypes.string.isRequired,
+    score: PropTypes.number,
+    maxScore: PropTypes.number,
+    isPassed: PropTypes.bool,
+    isGraded: PropTypes.bool,
+  }).isRequired,
+  quiz: PropTypes.shape({
+    passingScore: PropTypes.number,
+    questions: PropTypes.array.isRequired,
+  }).isRequired,
+};
 
 export default function QuizGrader() {
   const { id } = useParams();
