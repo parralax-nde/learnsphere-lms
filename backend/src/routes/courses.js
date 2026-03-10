@@ -1,12 +1,22 @@
 const express = require('express');
 const { PrismaClient } = require('@prisma/client');
+const rateLimit = require('express-rate-limit');
 const { authenticate, requireInstructor } = require('../middleware/auth');
 
 const router = express.Router();
 const prisma = new PrismaClient();
 
+// Rate limit: instructors can make up to 60 course API calls per 15 minutes
+const courseLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 60,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { error: 'Too many requests, please try again later.' },
+});
+
 // All course routes require authentication and instructor role
-router.use(authenticate, requireInstructor);
+router.use(courseLimiter, authenticate, requireInstructor);
 
 /**
  * GET /api/instructor/courses
