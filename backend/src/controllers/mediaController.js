@@ -109,7 +109,7 @@ function parseVideoUrlHandler(req, res) {
   const result = parseVideoUrl(url.trim());
   if (!result) {
     return res.status(422).json({
-      error: 'URL is not a recognised YouTube or Vimeo link.',
+      error: 'URL is not a recognized YouTube or Vimeo link.',
     });
   }
 
