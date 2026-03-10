@@ -1,4 +1,5 @@
 import { Router } from 'express';
+import rateLimit from 'express-rate-limit';
 import { authenticate, requireRole } from '../middleware/auth.js';
 import {
   listCourses,
@@ -13,6 +14,16 @@ import {
 } from '../controllers/courseController.js';
 
 const router = Router();
+
+// Rate limit for workflow-changing operations (submit/approve/reject)
+const workflowLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 60,
+  standardHeaders: true,
+  legacyHeaders: false,
+  skip: () => process.env.NODE_ENV === 'test',
+  message: { error: 'Too many requests, please try again later' },
+});
 
 // All course routes require authentication
 router.use(authenticate);
@@ -31,8 +42,8 @@ router.put('/:id', requireRole('INSTRUCTOR'), updateCourse);
 router.delete('/:id', requireRole('INSTRUCTOR'), deleteCourse);
 
 // ── Workflow transitions ──────────────────────────────────────────────────────
-router.post('/:id/submit', requireRole('INSTRUCTOR'), submitCourse);
-router.post('/:id/approve', requireRole('ADMIN'), approveCourse);
-router.post('/:id/reject', requireRole('ADMIN'), rejectCourse);
+router.post('/:id/submit', requireRole('INSTRUCTOR'), workflowLimiter, submitCourse);
+router.post('/:id/approve', requireRole('ADMIN'), workflowLimiter, approveCourse);
+router.post('/:id/reject', requireRole('ADMIN'), workflowLimiter, rejectCourse);
 
 export default router;
